@@ -2,39 +2,30 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Movement : MonoBehaviour
+public class Movement2 : MonoBehaviour
 {
+    public CharacterController controller;
     [SerializeField] private Rigidbody Player;
+    public float speed = 2f;
 
-    // Update is called once per frame
+    public float turnSmoothTime = 0.1f;
+    float turnSmoothVelocity;
+
     void Update()
     {
+        float horizontal = Input.GetAxis("Horizontal");
+        float vertical = Input.GetAxis("Vertical");
+        Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
 
-      
-
-
-       
-
-
-        if (Input.GetAxis("Horizontal") != 0)
-
+        if (direction.magnitude >= 0.1f)
         {
-            Vector3 direction = Vector3.right * Input.GetAxis("Horizontal");
-
-            transform.Translate(direction * 2f * Time.deltaTime, Space.World);
-
+            controller.Move(direction * speed * Time.deltaTime);
         }
-
-        if (Input.GetAxis("Vertical") != 0)
-
         {
-            Vector3 direction = Vector3.forward * Input.GetAxis("Vertical");
-
-            transform.Translate(direction * 2f * Time.deltaTime, Space.World);
-
+            float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
+            float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
+            transform.rotation = Quaternion.Euler(0f, angle, 0f);
         }
-
-
         if (Input.GetKeyDown(KeyCode.Space) && IsTouchingFloor())
 
         {
@@ -55,9 +46,7 @@ public class Movement : MonoBehaviour
             {
                 Destroy(result.collider.gameObject);
             }
-
         }
-
     }
     private void Jump()
     {
