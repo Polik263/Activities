@@ -14,7 +14,7 @@ public class Movement : MonoBehaviour
         {
             Vector3 direction = Vector3.right * Input.GetAxis("Horizontal");
 
-            transform.Translate(direction * 2f * Time.deltaTime);
+            transform.Translate(direction * 2f * Time.deltaTime, Space.World);
 
         }
 
@@ -23,7 +23,7 @@ public class Movement : MonoBehaviour
         {
             Vector3 direction = Vector3.forward * Input.GetAxis("Vertical");
 
-            transform.Translate(direction * 2f * Time.deltaTime);
+            transform.Translate(direction * 2f * Time.deltaTime, Space.World);
 
         }
 
